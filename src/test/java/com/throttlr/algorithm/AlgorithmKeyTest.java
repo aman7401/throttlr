@@ -17,8 +17,8 @@ import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 /**
  * Unit tests for algorithm key-building logic.
@@ -55,11 +55,14 @@ class AlgorithmKeyTest {
     @DisplayName("FixedWindow uses different windowId for different time buckets")
     void fixedWindow_differentWindowIds_forDifferentTimeBuckets() {
         RateLimitRule rule = rule(AlgorithmType.FIXED_WINDOW, 60);
+        FixedWindowAlgorithm algo = new FixedWindowAlgorithm(storageBackend);
 
-        new FixedWindowAlgorithm(storageBackend).isAllowed(request("key-fw", Instant.ofEpochSecond(3600)), rule);
+        algo.isAllowed(request("key-fw", Instant.ofEpochSecond(3600)), rule);
         assertKey("throttlr:fw:key-fw:60");
 
-        new FixedWindowAlgorithm(storageBackend).isAllowed(request("key-fw", Instant.ofEpochSecond(3660)), rule);
+        clearInvocations(storageBackend);
+
+        algo.isAllowed(request("key-fw", Instant.ofEpochSecond(3660)), rule);
         assertKey("throttlr:fw:key-fw:61");
     }
 
