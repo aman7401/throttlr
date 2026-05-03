@@ -29,8 +29,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // Skip rate limiting for actuator/health endpoints
-        if (request.getRequestURI().startsWith("/actuator")) {
+        // Skip rate limiting for actuator and admin endpoints
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/actuator") || uri.startsWith("/admin")) {
             filterChain.doFilter(request, response);
             return;
         }
