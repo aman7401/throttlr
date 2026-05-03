@@ -1,0 +1,49 @@
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+
+throttlr:
+  fail-open: true           # if Redis is down: true = allow all, false = block all
+  default-rule:
+    limit: 100
+    window-size-seconds: 60
+    algorithm: FIXED_WINDOW
+  rules:
+    - api-key: "key-basic"
+      limit: 10
+      window-size-seconds: 60
+      algorithm: FIXED_WINDOW
+    - api-key: "key-sliding-log"
+      limit: 10
+      window-size-seconds: 60
+      algorithm: SLIDING_WINDOW_LOG
+    - api-key: "key-sliding-counter"
+      limit: 10
+      window-size-seconds: 60
+      algorithm: SLIDING_WINDOW_COUNTER
+    - api-key: "key-token"
+      limit: 10
+      window-size-seconds: 60
+      algorithm: TOKEN_BUCKET
+    - api-key: "key-leaky"
+      limit: 10
+      window-size-seconds: 60
+      algorithm: LEAKY_BUCKET
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
