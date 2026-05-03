@@ -9,6 +9,15 @@
 
 ---
 
+## Design Docs
+
+| Document | Description |
+|---|---|
+| [HLD — High Level Design](docs/HLD.md) | System architecture, request flow, why Redis + Lua, scalability |
+| [LLD — Low Level Design](docs/LLD.md) | Class structure, Redis key design, algorithm internals, filter flow |
+
+---
+
 ## How it works
 
 ```
