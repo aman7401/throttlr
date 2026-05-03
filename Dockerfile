@@ -7,8 +7,8 @@ RUN mvn dependency:go-offline -q
 COPY src ./src
 RUN mvn clean package -DskipTests -q
 
-# Stage 2: Runtime (lean JRE image)
-FROM eclipse-temurin:17-jre-alpine
+# Stage 2: Runtime — eclipse-temurin:17-jre supports both AMD64 and ARM64 (Apple Silicon)
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/throttlr-1.0.0.jar app.jar
 EXPOSE 8080
